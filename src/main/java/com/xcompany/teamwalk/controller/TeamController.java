@@ -36,13 +36,13 @@ public class TeamController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/{teamId}")
+    @PostMapping("/{teamId}/steps")
     public ResponseEntity<Long> addSteps(@PathVariable String teamId, @RequestBody Long steps) {
         teamService.addSteps(teamId, steps);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/{teamId}")
+    @GetMapping("/{teamId}/steps")
     public ResponseEntity<Long> getSteps(@PathVariable String teamId) {
         return new ResponseEntity<>(teamService.getSteps(teamId), HttpStatus.OK);
     }
