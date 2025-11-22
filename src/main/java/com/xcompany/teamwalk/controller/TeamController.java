@@ -1,7 +1,9 @@
 package com.xcompany.teamwalk.controller;
 
-import com.xcompany.teamwalk.model.Team;
+import com.xcompany.teamwalk.dto.AddStepsRequest;
+import com.xcompany.teamwalk.dto.TeamScoreDto;
 import com.xcompany.teamwalk.service.TeamService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,8 +39,8 @@ public class TeamController {
     }
 
     @PostMapping("/{teamId}/steps")
-    public ResponseEntity<Long> addSteps(@PathVariable String teamId, @RequestBody Long steps) {
-        teamService.addSteps(teamId, steps);
+    public ResponseEntity<Long> addSteps(@PathVariable String teamId, @Valid @RequestBody AddStepsRequest request) {
+        teamService.addSteps(teamId, request.steps());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -48,7 +50,7 @@ public class TeamController {
     }
 
     @GetMapping("/leaderboard")
-    public ResponseEntity<List<Team>> getLeaderBoard() {
+    public ResponseEntity<List<TeamScoreDto>> getLeaderBoard() {
         return new ResponseEntity<>(teamService.getLeaderBoard(), HttpStatus.OK);
     }
 

@@ -14,4 +14,10 @@ public class GlobalExceptionHandler {
         String body = ex.getMessage();
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
+        String body = ex.getMessage();
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
 }
