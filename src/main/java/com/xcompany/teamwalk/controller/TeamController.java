@@ -1,6 +1,7 @@
 package com.xcompany.teamwalk.controller;
 
 import com.xcompany.teamwalk.dto.AddStepsRequest;
+import com.xcompany.teamwalk.dto.CreateTeamRequest;
 import com.xcompany.teamwalk.dto.TeamScoreDto;
 import com.xcompany.teamwalk.service.TeamService;
 import jakarta.validation.Valid;
@@ -27,8 +28,8 @@ public class TeamController {
     }
 
     @PostMapping
-    public ResponseEntity<Boolean> addTeam(@RequestBody String teamId) {
-        teamService.createTeam(teamId);
+    public ResponseEntity<Boolean> addTeam(@RequestBody @Valid CreateTeamRequest request) {
+        teamService.createTeam(request.teamId());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
