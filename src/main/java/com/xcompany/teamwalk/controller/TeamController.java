@@ -3,6 +3,7 @@ package com.xcompany.teamwalk.controller;
 import com.xcompany.teamwalk.dto.AddStepsRequest;
 import com.xcompany.teamwalk.dto.CreateTeamRequest;
 import com.xcompany.teamwalk.dto.TeamScoreDto;
+import com.xcompany.teamwalk.dto.TeamStepDto;
 import com.xcompany.teamwalk.service.TeamService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -46,8 +47,10 @@ public class TeamController {
     }
 
     @GetMapping("/{teamId}/steps")
-    public ResponseEntity<Long> getSteps(@PathVariable String teamId) {
-        return new ResponseEntity<>(teamService.getSteps(teamId), HttpStatus.OK);
+    public ResponseEntity<TeamStepDto> getSteps(@PathVariable String teamId) {
+        long steps = teamService.getSteps(teamId);
+        TeamStepDto response = new TeamStepDto(teamId, steps);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/leaderboard")
