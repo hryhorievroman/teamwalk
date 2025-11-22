@@ -20,4 +20,10 @@ public class GlobalExceptionHandler {
         String body = ex.getMessage();
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(Exception.class)
+    ResponseEntity<Object> handleException(Exception ex) {
+        String body = ex.getMessage();
+        return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
