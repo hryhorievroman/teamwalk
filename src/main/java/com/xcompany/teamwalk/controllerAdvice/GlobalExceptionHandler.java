@@ -1,5 +1,6 @@
 package com.xcompany.teamwalk.controllerAdvice;
 
+import com.xcompany.teamwalk.exception.TeamAlreadyExistsException;
 import com.xcompany.teamwalk.exception.TeamNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,12 @@ public class GlobalExceptionHandler {
     ResponseEntity<Object> handleTeamNotFoundException(TeamNotFoundException ex) {
         String body = ex.getMessage();
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(TeamAlreadyExistsException.class)
+    ResponseEntity<Object> handleTeamAlreadyExistsException(TeamAlreadyExistsException ex) {
+        String body = ex.getMessage();
+        return new ResponseEntity<>(body, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
