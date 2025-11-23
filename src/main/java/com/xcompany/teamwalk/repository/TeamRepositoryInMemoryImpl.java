@@ -12,8 +12,8 @@ public class TeamRepositoryInMemoryImpl implements TeamRepository {
     private final ConcurrentHashMap<String, Team> storage = new ConcurrentHashMap<>();
 
     @Override
-    public void save(Team team) {
-        storage.putIfAbsent(team.getId(), team);
+    public boolean saveIfAbsent(Team team) {
+        return storage.putIfAbsent(team.getId(), team) == null;
     }
 
     @Override

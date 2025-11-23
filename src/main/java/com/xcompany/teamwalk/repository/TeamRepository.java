@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface TeamRepository {
 
-    void save(Team team);
+    boolean saveIfAbsent(Team team);
 
     void delete(String teamId);
 
