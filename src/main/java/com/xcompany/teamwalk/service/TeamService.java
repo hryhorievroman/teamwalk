@@ -1,7 +1,6 @@
 package com.xcompany.teamwalk.service;
 
 import com.xcompany.teamwalk.dto.TeamScoreDto;
-import com.xcompany.teamwalk.exception.TeamAlreadyExistsException;
 import com.xcompany.teamwalk.exception.TeamNotFoundException;
 import com.xcompany.teamwalk.model.Team;
 import com.xcompany.teamwalk.repository.TeamRepository;
@@ -19,24 +18,22 @@ public class TeamService {
         this.teamRepository = teamRepository;
     }
 
-    public void createTeam(String teamId) {
-        boolean created = teamRepository.saveIfAbsent(new Team(teamId));
-        if (!created) {
-            throw new TeamAlreadyExistsException("The team " + teamId + " already exists");
-        }
+    public boolean createTeam(String teamId) {
+        return teamRepository.saveIfAbsent(new Team(teamId));
     }
 
-    public void removeTeam(String teamId) {
-        findTeamById(teamId);
-        teamRepository.delete(teamId);
+    public boolean removeTeam(String teamId) {
+        return teamRepository.delete(teamId);
     }
 
-    public void addSteps(String teamId, long steps) {
+    public long addSteps(String teamId, long steps) {
         if (steps <= 0) {
             throw new IllegalArgumentException("Steps must be greater than 0");
         }
+
         Team team = findTeamById(teamId);
-        team.addStep(steps);
+        return team.addStepAndGet(steps);
+
     }
 
     public long getSteps(String teamId) {
@@ -55,7 +52,10 @@ public class TeamService {
     public List<TeamScoreDto> getLeaderBoard() {
         List<Team> teams = teamRepository.findAll();
 
-        return teams.stream().map(team -> new TeamScoreDto(team.getId(), team.getSteps())).sorted(Comparator.comparingLong(TeamScoreDto::steps).reversed().thenComparing(TeamScoreDto::teamId)).toList();
+        return teams.stream().map(team -> new TeamScoreDto(team.getId(), team.getSteps()))
+                .sorted(Comparator.comparingLong(TeamScoreDto::steps).reversed()
+                        .thenComparing(TeamScoreDto::teamId))
+                .toList();
 
     }
 

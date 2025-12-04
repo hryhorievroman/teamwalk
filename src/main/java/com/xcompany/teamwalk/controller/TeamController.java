@@ -1,6 +1,7 @@
 package com.xcompany.teamwalk.controller;
 
 import com.xcompany.teamwalk.dto.AddStepsRequest;
+import com.xcompany.teamwalk.dto.AddStepsResponse;
 import com.xcompany.teamwalk.dto.CreateTeamRequest;
 import com.xcompany.teamwalk.dto.TeamScoreDto;
 import com.xcompany.teamwalk.dto.TeamStepDto;
@@ -30,32 +31,36 @@ public class TeamController {
 
     @PostMapping
     public ResponseEntity<Boolean> addTeam(@RequestBody @Valid CreateTeamRequest request) {
-        teamService.createTeam(request.teamId());
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        boolean isCreated = teamService.createTeam(request.teamId());
+        return isCreated
+                ? new ResponseEntity<>(true, HttpStatus.CREATED)
+                : new ResponseEntity<>(false, HttpStatus.CONFLICT);
+
     }
 
     @DeleteMapping("/{teamId}")
     public ResponseEntity<Boolean> deleteTeam(@PathVariable String teamId) {
-        teamService.removeTeam(teamId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        boolean isDeleted = teamService.removeTeam(teamId);
+        return isDeleted
+                ? new ResponseEntity<>(true, HttpStatus.OK)
+                : new ResponseEntity<>(false, HttpStatus.CONFLICT);
     }
 
     @PostMapping("/{teamId}/steps")
-    public ResponseEntity<Long> addSteps(@PathVariable String teamId, @Valid @RequestBody AddStepsRequest request) {
-        teamService.addSteps(teamId, request.steps());
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<AddStepsResponse> addSteps(@PathVariable String teamId, @Valid @RequestBody AddStepsRequest request) {
+        long steps = teamService.addSteps(teamId, request.steps());
+        return ResponseEntity.ok(new AddStepsResponse(teamId, steps));
     }
 
     @GetMapping("/{teamId}/steps")
     public ResponseEntity<TeamStepDto> getSteps(@PathVariable String teamId) {
         long steps = teamService.getSteps(teamId);
-        TeamStepDto response = new TeamStepDto(teamId, steps);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.ok(new TeamStepDto(teamId, steps));
     }
 
     @GetMapping("/leaderboard")
     public ResponseEntity<List<TeamScoreDto>> getLeaderBoard() {
-        return new ResponseEntity<>(teamService.getLeaderBoard(), HttpStatus.OK);
+        return ResponseEntity.ok(teamService.getLeaderBoard());
     }
 
 }

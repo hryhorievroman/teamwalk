@@ -8,7 +8,7 @@ public interface TeamRepository {
 
     boolean saveIfAbsent(Team team);
 
-    void delete(String teamId);
+    boolean delete(String teamId);
 
     Team findById(String teamId);
 

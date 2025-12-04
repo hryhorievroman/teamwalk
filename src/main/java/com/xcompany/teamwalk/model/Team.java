@@ -19,7 +19,7 @@ public class Team {
         return steps.get();
     }
 
-    public void addStep(long delta) {
-        steps.addAndGet(delta);
+    public long addStepAndGet(long delta) {
+        return steps.addAndGet(delta);
     }
 }

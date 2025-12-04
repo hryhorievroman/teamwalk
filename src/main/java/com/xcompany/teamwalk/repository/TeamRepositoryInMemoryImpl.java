@@ -17,8 +17,8 @@ public class TeamRepositoryInMemoryImpl implements TeamRepository {
     }
 
     @Override
-    public void delete(String teamId) {
-        storage.remove(teamId);
+    public boolean delete(String teamId) {
+        return storage.remove(teamId) != null;
     }
 
     @Override
