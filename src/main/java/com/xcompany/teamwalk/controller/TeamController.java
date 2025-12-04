@@ -30,20 +30,15 @@ public class TeamController {
     }
 
     @PostMapping
-    public ResponseEntity<Boolean> addTeam(@RequestBody @Valid CreateTeamRequest request) {
-        boolean isCreated = teamService.createTeam(request.teamId());
-        return isCreated
-                ? new ResponseEntity<>(true, HttpStatus.CREATED)
-                : new ResponseEntity<>(false, HttpStatus.CONFLICT);
-
+    public ResponseEntity<Void> addTeam(@RequestBody @Valid CreateTeamRequest request) {
+        teamService.createTeam(request.teamId());
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{teamId}")
     public ResponseEntity<Boolean> deleteTeam(@PathVariable String teamId) {
-        boolean isDeleted = teamService.removeTeam(teamId);
-        return isDeleted
-                ? new ResponseEntity<>(true, HttpStatus.OK)
-                : new ResponseEntity<>(false, HttpStatus.CONFLICT);
+        teamService.removeTeam(teamId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/{teamId}/steps")

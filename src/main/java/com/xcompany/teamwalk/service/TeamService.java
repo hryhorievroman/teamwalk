@@ -1,6 +1,7 @@
 package com.xcompany.teamwalk.service;
 
 import com.xcompany.teamwalk.dto.TeamScoreDto;
+import com.xcompany.teamwalk.exception.TeamAlreadyExistsException;
 import com.xcompany.teamwalk.exception.TeamNotFoundException;
 import com.xcompany.teamwalk.model.Team;
 import com.xcompany.teamwalk.repository.TeamRepository;
@@ -18,12 +19,18 @@ public class TeamService {
         this.teamRepository = teamRepository;
     }
 
-    public boolean createTeam(String teamId) {
-        return teamRepository.saveIfAbsent(new Team(teamId));
+    public void createTeam(String teamId) {
+        boolean isCreated = teamRepository.saveIfAbsent(new Team(teamId));
+        if (!isCreated) {
+            throw new TeamAlreadyExistsException(teamId);
+        }
     }
 
-    public boolean removeTeam(String teamId) {
-        return teamRepository.delete(teamId);
+    public void removeTeam(String teamId) {
+        boolean isRemoved = teamRepository.delete(teamId);
+        if (!isRemoved) {
+            throw new TeamNotFoundException(teamId);
+        }
     }
 
     public long addSteps(String teamId, long steps) {
@@ -52,9 +59,10 @@ public class TeamService {
     public List<TeamScoreDto> getLeaderBoard() {
         List<Team> teams = teamRepository.findAll();
 
-        return teams.stream().map(team -> new TeamScoreDto(team.getId(), team.getSteps()))
-                .sorted(Comparator.comparingLong(TeamScoreDto::steps).reversed()
-                        .thenComparing(TeamScoreDto::teamId))
+        return teams
+                .stream()
+                .map(team -> new TeamScoreDto(team.getId(), team.getSteps()))
+                .sorted(Comparator.comparingLong(TeamScoreDto::steps).reversed().thenComparing(TeamScoreDto::teamId))
                 .toList();
 
     }
