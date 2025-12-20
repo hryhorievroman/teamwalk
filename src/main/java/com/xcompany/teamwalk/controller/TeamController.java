@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -32,11 +33,12 @@ public class TeamController {
     @PostMapping
     public ResponseEntity<Void> addTeam(@RequestBody @Valid CreateTeamRequest request) {
         teamService.createTeam(request.teamId());
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        URI location = URI.create("/api/v1/teams/" + request.teamId());
+        return ResponseEntity.created(location).build();
     }
 
     @DeleteMapping("/{teamId}")
-    public ResponseEntity<Boolean> deleteTeam(@PathVariable String teamId) {
+    public ResponseEntity<Void> deleteTeam(@PathVariable String teamId) {
         teamService.removeTeam(teamId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
