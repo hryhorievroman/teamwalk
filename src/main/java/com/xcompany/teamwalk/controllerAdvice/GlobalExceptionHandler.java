@@ -4,7 +4,6 @@ import com.xcompany.teamwalk.dto.ErrorResponse;
 import com.xcompany.teamwalk.exception.ErrorCode;
 import com.xcompany.teamwalk.exception.TeamAlreadyExistsException;
 import com.xcompany.teamwalk.exception.TeamNotFoundException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -34,7 +33,7 @@ public class GlobalExceptionHandler {
 
     private ResponseEntity<ErrorResponse> buildErrorResponse(ErrorCode errorCode, String message) {
         String bodyMessage = message != null ? message : errorCode.getDefaultMessage();
-        ErrorResponse response = new ErrorResponse(errorCode.getCode(), bodyMessage, errorCode.getStatus().value());
+        ErrorResponse response = new ErrorResponse(bodyMessage, errorCode.getStatus().value());
         return ResponseEntity.status(errorCode.getStatus()).body(response);
     }
 }
